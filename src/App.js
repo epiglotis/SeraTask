@@ -2,10 +2,13 @@ import logo from './logo.svg';
 import './App.css';
 import Sidebar from './Components/Sidebar/Sidebar';
 import { ThemeProvider } from '@emotion/react';
-import { CssBaseline, createMuiTheme } from '@mui/material';
+import { CssBaseline, createTheme } from '@mui/material';
 import MainPage from './Components/MainPage/MainPage';
+import '@fontsource/poppins';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     // Customize colors here
     primary: {
@@ -14,7 +17,9 @@ const theme = createMuiTheme({
     secondary: {
       main: '#39C250', // Change to your desired secondary color
     },
-    // You can also customize other colors like error, warning, success, etc.
+  },
+  typography: {
+    fontFamily: 'Poppins, sans-serif',
   },
 });
 
@@ -22,8 +27,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Sidebar />
-      <MainPage/>
+      <Provider store={store}>
+        <Sidebar />
+        <MainPage />
+      </Provider>
     </ThemeProvider>
   );
 }
