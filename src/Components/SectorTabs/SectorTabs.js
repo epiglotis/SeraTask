@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import SensorBubbles from '../SectorBubbles/SensorBubbles';
+import SensorChart from '../Chart/Chart';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,10 +41,11 @@ function a11yProps(index) {
 }
 
 export default function SectorTabs({ dataArray }) {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(-1);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    // If the "Tümü" tab is selected, set the value to a special number, e.g., -1
+    setValue(newValue === -1 ? -1 : newValue);
   };
 
   React.useEffect(() => {
@@ -63,9 +65,11 @@ export default function SectorTabs({ dataArray }) {
           aria-label='basic tabs example'
           sx={{ color: '#39C250' }}
         >
+          <Tab value={-1} key={-1} label={"Tümü"} sx={{ color: 'inherit', backgroundColor: 'inherit' }}></Tab>
           {dataArray?.sektors.map((sektor, index) => (
             <Tab
               key={index}
+              value={index}
               label={sektor.sektor_name}
               {...a11yProps(index)}
               sx={{ color: 'inherit', backgroundColor: 'inherit' }}
@@ -74,19 +78,47 @@ export default function SectorTabs({ dataArray }) {
           <Tab label='Favoriler' />
         </Tabs>
       </Box>
+      <CustomTabPanel value={value} index={-1}>
+        {/* If the "Tümü" tab is selected, show all sektors and all sensors */}
+        <Box sx={{ overflowY: 'auto', maxHeight: '180px' }}>
+          <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {dataArray?.sektors.map((sektor, index) =>
+              Array.isArray(sektor) ? (
+                // If sektor is an array, map over it and show all sensors
+                sektor.map((sektor, index) => (
+                  <SensorBubbles key={index} sektor={sektor} />
+                ))
+              ) : (
+                // If sektor is an object, directly render the component to show all sensors
+                <SensorBubbles key={index} sektor={sektor} />
+              )
+            )}
+          </Box>
+        </Box>
+      </CustomTabPanel>
       {dataArray?.sektors.map((sektor, index) => (
         <CustomTabPanel key={index} value={value} index={index}>
-          {Array.isArray(sektor.sensor_list) ? (
-            // If sektor is an array, map over it
-            sektor.sensor_list.map((sensorList, index) => (
-              <SensorBubbles key={index} sensors={sensorList} />
-            ))
+          <Box sx={{ overflowY: 'auto', maxHeight: '180px' }}>
+          <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          {/* If any tab other than "Tümü" is selected, show specific sektor */}
+          {Array.isArray(sektor) ? (
+            // If sektor is an array, map over it and show its sensors
+            <Box sx={{ overflowY: 'auto', maxHeight: '400px' }}>
+              {sektor.map((sektor, index) => (
+                <SensorBubbles key={index} sektor={sektor} />
+              ))}
+            </Box>
           ) : (
-            // If sektor is an object, directly render the component
-            <SensorBubbles key={index} sensors={sektor.sensor_list} />
+            // If sektor is an object, directly render the component to show its sensors
+            <SensorBubbles key={index} sektor={sektor} />
           )}
+          </Box>
+          </Box>
+          
         </CustomTabPanel>
       ))}
+
+      
     </Box>
   );
 }

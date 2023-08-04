@@ -13,6 +13,7 @@ import SeraIcon from '../../Resources/SidebarIcons/sera-icon.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../Reducers/DataSlice';
 import SectorTabs from '../SectorTabs/SectorTabs';
+import SensorChart from '../Chart/Chart';
 
 const MainPage = () => {
   const DrawerHeader = styled('div')(({ theme }) => ({
@@ -106,6 +107,7 @@ const MainPage = () => {
         )}
       </Box>
       {selectedData ? <SectorTabs dataArray={selectedData}/>:null}
+      <SensorChart/>
     </Box>
   );
 };
