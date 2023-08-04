@@ -4,7 +4,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,22 +15,19 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
-  Label,
 } from 'recharts';
 import { selectSelectedSensors } from '../../Reducers/SelectedSensorsSlice';
 
 export default function SensorChart() {
   const selectedSensors = useSelector(selectSelectedSensors);
-  console.log(selectedSensors);
 
-  const [selectedOption, setSelectedOption] = useState('daily'); // Set the default option here
+  const [selectedOption, setSelectedOption] = useState('daily');
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  // Get the selected data based on the selectedOption
+  // Function to get the selected data based on the selectedOption for a specific sensor
   const getSelectedDataForSensor = (sensor) => {
     switch (selectedOption) {
       case 'minutely':
@@ -53,6 +49,25 @@ export default function SensorChart() {
       data.forEach((entry) => allDates.add(entry.date));
     });
     return Array.from(allDates);
+  };
+
+  // Function to generate an object that contains each sensor's data for each date
+  const generateChartData = () => {
+    const allDates = getAllDates();
+    const chartData = allDates.map((date) => {
+      const dataObject = { date };
+      selectedSensors.forEach((sensor) => {
+        const data = getSelectedDataForSensor(sensor);
+        const sensorData = data.find((entry) => entry.date === date);
+        if (sensorData) {
+          dataObject[sensor.sensor_name] = sensorData.avg;
+        } else {
+          dataObject[sensor.sensor_name] = null; // Use null if data is not available for a date
+        }
+      });
+      return dataObject;
+    });
+    return chartData;
   };
 
   // Create an array of colors for lines
@@ -86,18 +101,7 @@ export default function SensorChart() {
       <LineChart
         width={800}
         height={300}
-        data={getAllDates().map((date) => ({
-          date,
-          ...selectedSensors.reduce(
-            (data, sensor) => ({
-              ...data,
-              [sensor.sensor_name]: getSelectedDataForSensor(sensor).find(
-                (entry) => entry.date === date
-              )?.avg,
-            }),
-            {}
-          ),
-        }))}
+        data={generateChartData()} // Use the generated chart data
         margin={{
           top: 40, // Adjust top margin to make space for the SelectBox
           right: 30,
@@ -116,12 +120,6 @@ export default function SensorChart() {
             yAxisId='left'
             type='monotone'
             dataKey={sensor.sensor_name} // Use the sensor_name as the dataKey for each sensor
-            data={getAllDates().map((date) => ({
-              date,
-              [sensor.sensor_name]: getSelectedDataForSensor(sensor).find(
-                (entry) => entry.date === date
-              )?.avg,
-            }))}
             stroke={lineColors[index % lineColors.length]} // Use a different color for each line
             activeDot={{ r: 8 }}
           />
