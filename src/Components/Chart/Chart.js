@@ -51,12 +51,14 @@ export default function SensorChart() {
 
   // Function to handle changes in the start date
   const handleStartDateChange = (event) => {
-    setStartDate(new Date(event.target.value));
+    const newDate = event.target.value;
+    setStartDate(newDate ? new Date(newDate) : null);
   };
-
+  
   // Function to handle changes in the end date
   const handleEndDateChange = (event) => {
-    setEndDate(new Date(event.target.value));
+    const newDate = event.target.value;
+    setEndDate(newDate ? new Date(newDate) : null);
   };
 
   // Function to get the icon for a specific sensor
