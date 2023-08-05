@@ -5,7 +5,6 @@ import AirTemperatureIcon from '../../Resources/SidebarIcons/air_temperature.png
 import AirHumidityIcon from '../../Resources/SidebarIcons/air_humidity.png';
 import ShowChartIcon from '../../Resources/SidebarIcons/show-chart-icon.png';
 import ShowChartIconSelected from '../../Resources/SidebarIcons/show-chart-icon-selected.png';
-import RadiationIcon from '../../Resources/SidebarIcons/par-radyasyon.png';
 import ECIcon from '../../Resources/SidebarIcons/bolt-solid.svg';
 import PHIcon from '../../Resources/SidebarIcons/droplet-solid.svg';
 import RadIcon from '../../Resources/SidebarIcons/radiation-solid.svg';

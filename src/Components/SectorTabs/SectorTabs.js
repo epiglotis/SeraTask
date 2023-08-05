@@ -42,10 +42,14 @@ function a11yProps(index) {
 
 export default function SectorTabs({ dataArray }) {
   const [value, setValue] = React.useState(-1);
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const handleChange = (event, newValue) => {
     // If the "Tümü" tab is selected, set the value to a special number, e.g., -1
     setValue(newValue === -1 ? -1 : newValue);
+  };
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
   React.useEffect(() => {
@@ -58,6 +62,16 @@ export default function SectorTabs({ dataArray }) {
 
   return (
     <Box sx={{ width: '100%' }}>
+      {/* Add the search box */}
+      <Box sx={{ p: 2 }}>
+        <input
+          type='text'
+          placeholder='Search sensors...'
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{ width: '100%', padding: '8px', fontSize: '16px' }}
+        />
+      </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
@@ -65,14 +79,14 @@ export default function SectorTabs({ dataArray }) {
           aria-label='basic tabs example'
           sx={{ color: '#39C250' }}
         >
-          <Tab value={-1} key={-1} label={"Tümü"} sx={{ color: 'inherit', backgroundColor: 'inherit' }}></Tab>
+          <Tab value={-1} key={-1} label={"Tümü"} sx={{ color: 'inherit', backgroundColor: 'inherit',borderBottom: value === -1 ? '2px solid #39C250':"none" }}></Tab>
           {dataArray?.sektors.map((sektor, index) => (
             <Tab
               key={index}
               value={index}
               label={sektor.sektor_name}
               {...a11yProps(index)}
-              sx={{ color: 'inherit', backgroundColor: 'inherit' }}
+              sx={{ color: 'inherit', backgroundColor: 'inherit', borderBottom: value === index ? '2px solid #39C250':"none", }}
             />
           ))}
           <Tab label='Favoriler' />
@@ -98,24 +112,28 @@ export default function SectorTabs({ dataArray }) {
       </CustomTabPanel>
       {dataArray?.sektors.map((sektor, index) => (
         <CustomTabPanel key={index} value={value} index={index}>
-          <Box sx={{ overflowY: 'auto', maxHeight: '180px' }}>
+        <Box sx={{ overflowY: 'auto', maxHeight: '180px' }}>
           <Box sx={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {/* If any tab other than "Tümü" is selected, show specific sektor */}
-          {Array.isArray(sektor) ? (
-            // If sektor is an array, map over it and show its sensors
-            <Box sx={{ overflowY: 'auto', maxHeight: '400px' }}>
-              {sektor.map((sektor, index) => (
+            {/* If any tab other than "Tümü" is selected, show specific sektor */}
+            {Array.isArray(sektor) ? (
+              // If sektor is an array, map over it and show its sensors that match the search query
+              <Box sx={{ overflowY: 'auto', maxHeight: '400px' }}>
+                {sektor
+                  .filter((sensor) =>
+                    sensor?.sensor_name?.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((sensor, index) => <SensorBubbles key={index} sektor={sensor} />)
+                }
+              </Box>
+            ) : (
+              // If sektor is an object, directly render the component to show its sensors
+              (sektor?.sensor_name?.toLowerCase().includes(searchQuery.toLowerCase())) && (
                 <SensorBubbles key={index} sektor={sektor} />
-              ))}
-            </Box>
-          ) : (
-            // If sektor is an object, directly render the component to show its sensors
-            <SensorBubbles key={index} sektor={sektor} />
-          )}
+              )
+            )}
           </Box>
-          </Box>
-          
-        </CustomTabPanel>
+        </Box>
+      </CustomTabPanel>
       ))}
 
       
