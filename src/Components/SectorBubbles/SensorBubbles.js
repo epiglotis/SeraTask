@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addSensor, removeSensor, selectSelectedSensors } from '../../Reducers/SelectedSensorsSlice';
 
 const SensorBubbles = (props) => {
-  const sektor = props;
+  const sektor = props.sektor;
+  const searchQuery = props.searchQuery;
   const dispatch = useDispatch();
   const selectedSensors = useSelector(selectSelectedSensors);
 
@@ -132,13 +133,17 @@ const SensorBubbles = (props) => {
         ); // Default icon if the sensor name does not match any of the above cases
     }
   };
+  const filterSensors = (sensor) =>
+  sensor.sensor_name.toLowerCase().includes(searchQuery.toLowerCase());
 
   return (
     <>
-      {sektor.sektor.sensor_list.map((sensor, index) => (
-        <Box
-          key={index}
-          onClick={() => handleClick(sensor)}
+      {sektor.sensor_list
+        .filter(filterSensors) // Filter the sensors based on the search query
+        .map((sensor, index) => (
+          <Box
+            key={index}
+            onClick={() => handleClick(sensor)}
           display='flex'
           flexDirection='column'
           alignItems='center'
@@ -166,7 +171,7 @@ const SensorBubbles = (props) => {
             }}
           >
             <Typography variant='body2' component='p' sx={{ margin: 0 }}>
-              {sektor.sektor.sektor_name}
+              {sektor.sektor_name}
             </Typography>
             <Box display='flex' alignItems='center' justifyContent='flex-start'>
               {getSensorIcon(sensor.sensor_type)}

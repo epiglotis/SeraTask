@@ -17,10 +17,15 @@ const theme = createTheme({
     secondary: {
       main: '#39C250', // Change to your desired secondary color
     },
+    background:{
+      default:"#F9F9F9",
+
+    }
   },
   typography: {
     fontFamily: 'Poppins, sans-serif',
   },
+  
 });
 
 function App() {

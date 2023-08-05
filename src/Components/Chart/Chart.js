@@ -5,6 +5,8 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -249,16 +251,22 @@ export default function SensorChart() {
     '#33FFDD',
   ];
 
+  const isMobile = useMediaQuery('(min-width:1200px)')
+
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: isMobile?'row':"column",
+        backgroundColor: '#FFFFFF',
+        marginTop:"30px",
+        paddingBottom:"30px",
+        paddingTop:"10px"
       }}
     >
       <LineChart
-        width={800}
-        height={300}
+        width=  {isMobile ? 900:700}
+        height={400}
         data={generateChartData()} // Use the generated chart data
         margin={{
           top: 40, // Adjust top margin to make space for the SelectBox
@@ -268,7 +276,7 @@ export default function SensorChart() {
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='date' angle={-45} dx={10} dy={10} height={30} fontSize={10} />
+        <XAxis dataKey='date' angle={-45} dx={10} dy={10} height={50} fontSize={10} />
         <YAxis yAxisId='left'>
           <Label
             value='Hava Sıcaklığı C°'
@@ -298,10 +306,10 @@ export default function SensorChart() {
           />
         ))}
       </LineChart>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignSelf:"center",justifyContent: 'flex-end', flex: 1, }}>
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <FormControl variant='outlined' sx={{ flex: '1' }}>
-            <InputLabel id='select-label'>Veri Tipi</InputLabel>
+            <InputLabel id='select-label' variant='outlined' >Veri Tipi</InputLabel>
             <Select
               labelId='select-label'
               id='select-date-type'
@@ -309,9 +317,9 @@ export default function SensorChart() {
               onChange={handleDateTypeChange}
               label='Veri Tipi'
             >
-              <MenuItem value='minutely'>Minutely</MenuItem>
-              <MenuItem value='daily'>Daily</MenuItem>
-              <MenuItem value='weekly'>Weekly</MenuItem>
+              <MenuItem value='minutely'>Dakikalık</MenuItem>
+              <MenuItem value='daily'>Günlük</MenuItem>
+              <MenuItem value='weekly'>Haftalık</MenuItem>
             </Select>
           </FormControl>
           <FormControl
@@ -357,7 +365,8 @@ export default function SensorChart() {
           />
         </Box>
         <Box sx={{ marginTop: '1rem' }}>
-          <h2>Sensörler:</h2>
+          <Typography>Sensörler:</Typography>
+          <Box sx={{border: '0.75px solid #D9D9D9',minHeight:150}}>
           {selectedSensors.map((sensor,index) => (
             <Box
             key={sensor.sensor_name}
@@ -374,6 +383,7 @@ export default function SensorChart() {
             <span>{getSensorIcon(sensor.sensor_type)}{sensor.sensor_name}</span>
           </Box>
           ))}
+          </Box>
         </Box>
       </Box>
     </Box>

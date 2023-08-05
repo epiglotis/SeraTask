@@ -77,6 +77,7 @@ const MainPage = () => {
               fontSize: 18,
               fontWeight: 500,
               letterSpacing: 0.02,
+              marginLeft:"8px",
             }}
           >
             Sera
