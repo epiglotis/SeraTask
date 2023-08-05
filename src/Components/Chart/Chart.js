@@ -169,6 +169,7 @@ export default function SensorChart() {
     switch (selectedDateTypeOption) {
       case 'minutely':
         return sensor.minutely || [];
+
       case 'daily':
         return sensor.daily || [];
       case 'weekly':
@@ -181,11 +182,17 @@ export default function SensorChart() {
   const getSelectedValueTypeForSensor = (sensorData) => {
     switch (selectedValueTypeOption) {
       case 'min':
-        return sensorData.min || null;
+        return selectedDateTypeOption === 'minutely'
+          ? sensorData.value || null
+          : sensorData.min || null;
       case 'avg':
-        return sensorData.avg || null;
+        return selectedDateTypeOption === 'minutely'
+          ? sensorData.value || null
+          : sensorData.avg || null;
       case 'max':
-        return sensorData.max || null;
+        return selectedDateTypeOption === 'minutely'
+          ? sensorData.value || null
+          : sensorData.max || null;
       default:
         return null;
     }
@@ -251,21 +258,30 @@ export default function SensorChart() {
     '#33FFDD',
   ];
 
-  const isMobile = useMediaQuery('(min-width:1200px)')
+  const isMobile = useMediaQuery('(min-width:1200px)');
+
+  const menuItems =
+  selectedDateTypeOption === 'minutely'
+    ? [{ value: 'avg', label: 'Değer' }]
+    : [
+        { value: 'min', label: 'Minimum' },
+        { value: 'avg', label: 'Ortalama' },
+        { value: 'max', label: 'Maximum' },
+      ];
 
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: isMobile?'row':"column",
+        flexDirection: isMobile ? 'row' : 'column',
         backgroundColor: '#FFFFFF',
-        marginTop:"30px",
-        paddingBottom:"30px",
-        paddingTop:"10px"
+        marginTop: '30px',
+        paddingBottom: '30px',
+        paddingTop: '10px',
       }}
     >
       <LineChart
-        width=  {isMobile ? 900:700}
+        width={isMobile ? 900 : 700}
         height={400}
         data={generateChartData()} // Use the generated chart data
         margin={{
@@ -276,7 +292,14 @@ export default function SensorChart() {
         }}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='date' angle={-45} dx={10} dy={10} height={50} fontSize={10} />
+        <XAxis
+          dataKey='date'
+          angle={-45}
+          dx={10}
+          dy={10}
+          height={50}
+          fontSize={10}
+        />
         <YAxis yAxisId='left'>
           <Label
             value='Hava Sıcaklığı C°'
@@ -306,10 +329,20 @@ export default function SensorChart() {
           />
         ))}
       </LineChart>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignSelf:"center",justifyContent: 'flex-end', flex: 1, }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignSelf: 'center',
+          justifyContent: 'flex-end',
+          flex: 1,
+        }}
+      >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <FormControl variant='outlined' sx={{ flex: '1' }}>
-            <InputLabel id='select-label' variant='outlined' >Veri Tipi</InputLabel>
+            <InputLabel id='select-label' variant='outlined'>
+              Veri Tipi
+            </InputLabel>
             <Select
               labelId='select-label'
               id='select-date-type'
@@ -328,16 +361,18 @@ export default function SensorChart() {
           >
             <InputLabel id='value-type-label'>Veri Türü</InputLabel>
             <Select
-              labelId='value-type-label'
-              id='select-value-type'
-              value={selectedValueTypeOption}
-              onChange={handleValueTypeChange}
-              label='Veri Türü'
-            >
-              <MenuItem value='min'>Minimum</MenuItem>
-              <MenuItem value='avg'>Ortalama</MenuItem>
-              <MenuItem value='max'>Maximum</MenuItem>
-            </Select>
+            labelId='value-type-label'
+            id='select-value-type'
+            value={selectedValueTypeOption}
+            onChange={handleValueTypeChange}
+            label='Veri Türü'
+          >
+            {menuItems.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
           </FormControl>
         </Box>
         <Box sx={{ display: 'flex', marginTop: '1rem' }}>
@@ -366,23 +401,32 @@ export default function SensorChart() {
         </Box>
         <Box sx={{ marginTop: '1rem' }}>
           <Typography>Sensörler:</Typography>
-          <Box sx={{border: '0.75px solid #D9D9D9',minHeight:150}}>
-          {selectedSensors.map((sensor,index) => (
-            <Box
-            key={sensor.sensor_name}
-            sx={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}
-          >
-            <div
-              style={{
-                width: '20px',
-                borderBottom: `2px solid ${lineColors[index % lineColors.length]}`,
-                marginRight: '8px',
-              }}
-            />
-            
-            <span>{getSensorIcon(sensor.sensor_type)}{sensor.sensor_name}</span>
-          </Box>
-          ))}
+          <Box sx={{ border: '0.75px solid #D9D9D9', minHeight: 150 }}>
+            {selectedSensors.map((sensor, index) => (
+              <Box
+                key={sensor.sensor_name}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '8px',
+                }}
+              >
+                <div
+                  style={{
+                    width: '20px',
+                    borderBottom: `2px solid ${
+                      lineColors[index % lineColors.length]
+                    }`,
+                    marginRight: '8px',
+                  }}
+                />
+
+                <span>
+                  {getSensorIcon(sensor.sensor_type)}
+                  {sensor.sensor_name}
+                </span>
+              </Box>
+            ))}
           </Box>
         </Box>
       </Box>
