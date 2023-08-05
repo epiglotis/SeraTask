@@ -1,3 +1,4 @@
+// Import required libraries and components
 import {
   Box,
   FormControl,
@@ -17,7 +18,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   Label,
 } from 'recharts';
 import { selectSelectedSensors } from '../../Reducers/SelectedSensorsSlice';
@@ -30,31 +30,40 @@ import RadIcon from '../../Resources/SidebarIcons/radiation-solid.svg';
 import ParIcon from '../../Resources/SidebarIcons/x-ray-solid.svg';
 
 export default function SensorChart() {
+  // Get the selected sensors from the Redux store
   const selectedSensors = useSelector(selectSelectedSensors);
 
+  // State variables for selected options and dates
   const [selectedDateTypeOption, setSelectedDateTypeOption] = useState('daily');
   const [selectedValueTypeOption, setSelectedValueTypeOption] = useState('avg');
-
   const [startDate, setStartDate] = useState(null); // State variable for start date
   const [endDate, setEndDate] = useState(null); // State variable for end date
 
+  // Function to handle changes in the selected date type option
   const handleDateTypeChange = (event) => {
     setSelectedDateTypeOption(event.target.value);
   };
+
+  // Function to handle changes in the selected value type option
   const handleValueTypeChange = (event) => {
     setSelectedValueTypeOption(event.target.value);
   };
+
+  // Function to handle changes in the start date
   const handleStartDateChange = (event) => {
     setStartDate(new Date(event.target.value));
   };
 
+  // Function to handle changes in the end date
   const handleEndDateChange = (event) => {
     setEndDate(new Date(event.target.value));
   };
 
+  // Function to get the icon for a specific sensor
   const getSensorIcon = (sensorName) => {
     const iconSize = '1em'; // Set a fixed height for the icons
     switch (sensorName) {
+      // Return the appropriate icon based on the sensor name
       case 'Hava Sıcaklığı':
         return (
           <img
@@ -149,6 +158,7 @@ export default function SensorChart() {
     }
   };
 
+  // Map of Turkish month names to month numbers
   const monthMap = {
     Ocak: '01',
     Şubat: '02',
@@ -169,7 +179,6 @@ export default function SensorChart() {
     switch (selectedDateTypeOption) {
       case 'minutely':
         return sensor.minutely || [];
-
       case 'daily':
         return sensor.daily || [];
       case 'weekly':
@@ -179,6 +188,7 @@ export default function SensorChart() {
     }
   };
 
+  // Function to get the selected value type for a specific sensor data
   const getSelectedValueTypeForSensor = (sensorData) => {
     switch (selectedValueTypeOption) {
       case 'min':
@@ -208,9 +218,9 @@ export default function SensorChart() {
     return Array.from(allDates);
   };
 
+  // Function to parse a date string in the format "01 Mayıs 23" to "2023-05-01" for Date parsing
   const parseDate = (dateString) => {
     const [day, month, year] = dateString.split(' ');
-    // Assuming your date format is "01 Mayıs 23", convert it to "2023-05-01" for Date parsing
     const formattedDate = `${year < 2000 ? '20' : '19'}${year}-${
       monthMap[month]
     }-${day}`;
@@ -223,9 +233,10 @@ export default function SensorChart() {
     const chartData = allDates.map((date) => {
       const currentDate = parseDate(date);
 
+      // Filter out dates before the selected start date or after the selected end date
       if (
-        (startDate && currentDate < startDate) || // Filter out dates before the selected start date
-        (endDate && currentDate > endDate) // Filter out dates after the selected end date
+        (startDate && currentDate < startDate) ||
+        (endDate && currentDate > endDate)
       ) {
         return null; // Return null for dates outside the selected range
       }
@@ -258,17 +269,20 @@ export default function SensorChart() {
     '#33FFDD',
   ];
 
+  // Check if the screen width is mobile size
   const isMobile = useMediaQuery('(min-width:1200px)');
 
+  // Create menu items for the Value Type Select Box based on the selectedDateTypeOption
   const menuItems =
-  selectedDateTypeOption === 'minutely'
-    ? [{ value: 'avg', label: 'Değer' }]
-    : [
-        { value: 'min', label: 'Minimum' },
-        { value: 'avg', label: 'Ortalama' },
-        { value: 'max', label: 'Maximum' },
-      ];
+    selectedDateTypeOption === 'minutely'
+      ? [{ value: 'avg', label: 'Değer' }]
+      : [
+          { value: 'min', label: 'Minimum' },
+          { value: 'avg', label: 'Ortalama' },
+          { value: 'max', label: 'Maximum' },
+        ];
 
+  // Return the JSX for the SensorChart component
   return (
     <Box
       sx={{
@@ -280,6 +294,7 @@ export default function SensorChart() {
         paddingTop: '10px',
       }}
     >
+      {/* Recharts LineChart component to display the sensor data */}
       <LineChart
         width={isMobile ? 900 : 700}
         height={400}
@@ -338,6 +353,7 @@ export default function SensorChart() {
           flex: 1,
         }}
       >
+        {/* Select Boxes and Date Pickers to customize the chart */}
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <FormControl variant='outlined' sx={{ flex: '1' }}>
             <InputLabel id='select-label' variant='outlined'>
@@ -361,18 +377,18 @@ export default function SensorChart() {
           >
             <InputLabel id='value-type-label'>Veri Türü</InputLabel>
             <Select
-            labelId='value-type-label'
-            id='select-value-type'
-            value={selectedValueTypeOption}
-            onChange={handleValueTypeChange}
-            label='Veri Türü'
-          >
-            {menuItems.map((item) => (
-              <MenuItem key={item.value} value={item.value}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Select>
+              labelId='value-type-label'
+              id='select-value-type'
+              value={selectedValueTypeOption}
+              onChange={handleValueTypeChange}
+              label='Veri Türü'
+            >
+              {menuItems.map((item) => (
+                <MenuItem key={item.value} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
         </Box>
         <Box sx={{ display: 'flex', marginTop: '1rem' }}>
@@ -401,6 +417,7 @@ export default function SensorChart() {
         </Box>
         <Box sx={{ marginTop: '1rem' }}>
           <Typography>Sensörler:</Typography>
+          {/* Display the selected sensors */}
           <Box sx={{ border: '0.75px solid #D9D9D9', minHeight: 150 }}>
             {selectedSensors.map((sensor, index) => (
               <Box
@@ -411,6 +428,7 @@ export default function SensorChart() {
                   marginBottom: '8px',
                 }}
               >
+                {/* Colored bar representing each sensor */}
                 <div
                   style={{
                     width: '20px',
@@ -420,7 +438,7 @@ export default function SensorChart() {
                     marginRight: '8px',
                   }}
                 />
-
+                {/* Sensor icon and name */}
                 <span>
                   {getSensorIcon(sensor.sensor_type)}
                   {sensor.sensor_name}

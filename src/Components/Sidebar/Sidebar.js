@@ -6,15 +6,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import { ChevronLeft, ChevronRight, Inbox, Menu } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Menu } from '@mui/icons-material';
 
 import SeracellLogo from '../../Resources/SidebarIcons/Seracell-Logo.png';
 import SeraIcon from '../../Resources/SidebarIcons/sera-icon.png';
@@ -178,7 +176,7 @@ export default function Sidebar() {
                     justifyContent: 'center',
                   }}
                 >
-                  <img src={SidebarIcons[index]}></img>
+                  <img src={SidebarIcons[index]} alt="sidebarIcons"></img>
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 , color:" #38C34E"}} />
               </ListItemButton>
@@ -203,7 +201,7 @@ export default function Sidebar() {
                     justifyContent: 'center',
                   }}
                 >
-                  <img src={ProfileIcons[index]}></img>
+                  <img src={ProfileIcons[index]} alt='profileIcons'></img>
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>

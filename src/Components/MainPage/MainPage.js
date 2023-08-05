@@ -7,7 +7,6 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import SeraIcon from '../../Resources/SidebarIcons/sera-icon.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,19 +30,12 @@ const MainPage = () => {
     setSelectedData(event.target.value);
   };
 
-  
-
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.data);
 
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
-
-  useEffect(()=>{
-    console.log(selectedData);
-    console.log(data);
-  },[selectedData],data)
 
   if (loading) {
     return <div>Loading...</div>;
@@ -77,15 +69,17 @@ const MainPage = () => {
               fontSize: 18,
               fontWeight: 500,
               letterSpacing: 0.02,
-              marginLeft:"8px",
+              marginLeft: '8px',
             }}
           >
             Sera
           </Typography>
         </Box>
         {data && (
-          <FormControl sx={{ minWidth: 180, marginLeft:3 }}>
-            <InputLabel id="demo-simple-select-autowidth-label">Ar-Ge Serası</InputLabel>
+          <FormControl sx={{ minWidth: 180, marginLeft: 3 }}>
+            <InputLabel id='demo-simple-select-autowidth-label'>
+              Ar-Ge Serası
+            </InputLabel>
             <Select
               labelId='demo-simple-select-label'
               id='demo-simple-select'
@@ -95,10 +89,7 @@ const MainPage = () => {
             >
               {data.length !== 0
                 ? data?.map((value) => (
-                    <MenuItem
-                      key={data.indexOf(value)}
-                      value={value}
-                    >
+                    <MenuItem key={data.indexOf(value)} value={value}>
                       {value.greenhouse_name}
                     </MenuItem>
                   ))
@@ -107,8 +98,8 @@ const MainPage = () => {
           </FormControl>
         )}
       </Box>
-      {selectedData ? <SectorTabs dataArray={selectedData}/>:null}
-      <SensorChart/>
+      {selectedData ? <SectorTabs dataArray={selectedData} /> : null}
+      <SensorChart />
     </Box>
   );
 };

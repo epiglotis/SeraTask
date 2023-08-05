@@ -53,9 +53,6 @@ export default function SectorTabs({ dataArray }) {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
-  React.useEffect(() => {
-    console.log(dataArray);
-  }, [dataArray]);
 
   if (!dataArray || !dataArray.sektors) {
     return null;
