@@ -1,6 +1,7 @@
 {
   "name": "sera",
   "version": "0.1.0",
+  "homepage": "https://epiglotis.github.io/SeraTask",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -23,6 +24,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "concurrently \"cd Backend && npm i && node server.js\" \"npm i && react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -47,6 +50,7 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "gh-pages": "^5.0.0"
   }
 }
