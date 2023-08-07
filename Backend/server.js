@@ -9,7 +9,6 @@ const port = 3001; // Use any port you prefer
 app.use(express.json());
 app.use(cors());
 
-// Example route - replace this with your actual API routes
 app.get('/api/data', async (req, res) => {
     try {
       const response = await axios.get('https://www.jsonkeeper.com/b/92Y7');

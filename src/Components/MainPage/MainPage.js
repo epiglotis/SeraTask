@@ -24,19 +24,24 @@ const MainPage = () => {
     ...theme.mixins.toolbar,
   }));
 
+  // State to manage the selected data
   const [selectedData, setSelectedData] = useState({});
 
+  // Handler for the data selection change
   const handleChange = (event) => {
     setSelectedData(event.target.value);
   };
 
+  // Redux dispatch and state management
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.data);
 
+  // Fetch data using Redux when the component mounts
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
 
+  // Loading and error handling
   if (loading) {
     return <div>Loading...</div>;
   }

@@ -17,117 +17,125 @@ import {
 } from '../../Reducers/SelectedSensorsSlice';
 
 const SensorBubbles = (props) => {
-  const sektor = props.sektor;
-  const searchQuery = props.searchQuery;
-  const dispatch = useDispatch();
-  const selectedSensors = useSelector(selectSelectedSensors);
+  // Extract props
+const sektor = props.sektor;
+const searchQuery = props.searchQuery;
 
-  const handleClick = (sensor) => {
-    if (selectedSensors.includes(sensor)) {
-      dispatch(removeSensor(sensor)); // Dispatching the removeSensor action object
-    } else {
-      dispatch(addSensor(sensor)); // Dispatching the addSensor action object
-    }
-  };
+// Access Redux state and actions
+const dispatch = useDispatch();
+const selectedSensors = useSelector(selectSelectedSensors);
 
-  const getSensorIcon = (sensorName) => {
-    const iconSize = '1em'; // Set a fixed height for the icons
-    switch (sensorName) {
-      case 'Hava Sıcaklığı':
-        return (
-          <img
-            src={AirTemperatureIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      case 'Hava Nemi':
-        return (
-          <img
-            src={AirHumidityIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      case 'EC':
-        return (
-          <img
-            src={ECIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      case 'pH':
-        return (
-          <img
-            src={PHIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      case 'PAR':
-        return (
-          <img
-            src={ParIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      case 'Toplam Radyasyon':
-        return (
-          <img
-            src={RadIcon}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        );
-      default:
-        return (
-          <img
-            src={Heat}
-            alt='logo'
-            style={{
-              width: iconSize,
-              height: iconSize,
-              objectFit: 'contain',
-              marginRight: '10px',
-            }}
-          />
-        ); // Default icon if the sensor name does not match any of the above cases
-    }
-  };
-  const filterSensors = (sensor) =>
-    sensor.sensor_name.toLowerCase().includes(searchQuery.toLowerCase());
+// Handle sensor click event
+const handleClick = (sensor) => {
+  // Check if the sensor is already selected
+  if (selectedSensors.includes(sensor)) {
+    dispatch(removeSensor(sensor)); // Dispatch the removeSensor action
+  } else {
+    dispatch(addSensor(sensor)); // Dispatch the addSensor action
+  }
+};
+
+// Get the icon for a specific sensor
+const getSensorIcon = (sensorName) => {
+  const iconSize = '1em'; // Set a fixed height for the icons
+  switch (sensorName) {
+    case 'Hava Sıcaklığı':
+      return (
+        <img
+          src={AirTemperatureIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    case 'Hava Nemi':
+      return (
+        <img
+          src={AirHumidityIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    case 'EC':
+      return (
+        <img
+          src={ECIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    case 'pH':
+      return (
+        <img
+          src={PHIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    case 'PAR':
+      return (
+        <img
+          src={ParIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    case 'Toplam Radyasyon':
+      return (
+        <img
+          src={RadIcon}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      );
+    default:
+      return (
+        <img
+          src={Heat}
+          alt='logo'
+          style={{
+            width: iconSize,
+            height: iconSize,
+            objectFit: 'contain',
+            marginRight: '10px',
+          }}
+        />
+      ); // Default icon if the sensor name does not match any of the above cases
+  }
+};
+
+// Filter sensors based on search query
+const filterSensors = (sensor) =>
+  sensor.sensor_name.toLowerCase().includes(searchQuery.toLowerCase());
 
   return (
     <>
