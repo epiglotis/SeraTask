@@ -5,6 +5,7 @@ import axios from 'axios';
 // Async thunk to fetch data
 export const fetchData = createAsyncThunk('data/fetchData', async () => {
   const response = await axios.get('http://localhost:3001/api/data');
+  console.log(response);
   return response.data;
 });
 
